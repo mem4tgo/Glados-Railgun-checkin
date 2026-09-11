@@ -1,39 +1,39 @@
-名称: 自动检查
+name: auto check
 
-在:
+on:
   workflow_dispatch:
-  推送:
-    分支: [ 主 ]
-    路径忽略:
+  push:
+    branches: [ main ]
+    paths-ignore:
       - 'README.md'
       - 'imgs/**'
-  日程表:
+  schedule:
     - cron: '0 1,4,12 * * *'
 
-职位:
-  构建:
-    名称: glados/railgun 签到
-    运行于: ubuntu-latest
+jobs:
+  build:
+    name: glados/railgun checkin
+    runs-on: ubuntu-latest
       
-    权限:
-      目录: 阅读
-      操作: 写入
+    permissions:
+      contents: read
+      actions: write
 
-    策略:
-      矩阵:
+    strategy:
+      matrix:
         python-version: [3.13]
 
-    # 在这里添加全局环境变量，强制后续所有第三方 actions 兼容 Node.js 24 运行环境
-    环境:
-      强制将 JavaScript 操作转换为 Node24: true
+    # 这里加入全局环境变量，强制后续所有第三方 actions 兼容 Node.js 24 运行环境
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-    步骤:
-    - 名称: 结账代码
-      使用: actions/checkout@v6
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
 
-    - 名称: 设置 Python ${{ matrix.python-version }}
-      使用: actions/setup-python@v6
-      与:
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v6
+      with:
         python-version: ${{ matrix.python-version }}
 
     # 安装 python 库
